@@ -145,13 +145,13 @@ class GoalPositionController:
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
             t = time()
-            if distance_error < .05:
+            if abs(distance_error) < .05:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
             else:
                 ulin = self.PconLin.control(distance_error, t)
                 ctrl_msg.linear.x = ulin
-            if angle_error < .05:
+            if abs(angle_error) < .05:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
@@ -218,7 +218,7 @@ class GoalAngleController:
             t = time()
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
-            if math.abs(angle_error) < .05:
+            if abs(angle_error) < .05:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
