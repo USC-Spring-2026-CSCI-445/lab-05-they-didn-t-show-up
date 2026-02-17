@@ -155,7 +155,7 @@ class GoalPositionController:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
-                ctrl_msg.angular.z = uang
+                ctrl_msg.angular.z = -uang
 
             ######### Your code ends here #########
 
@@ -178,7 +178,7 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
-
+        self.PconRota = PDController(2,.5, -2.84, 2.84)
         ######### Your code ends here #########
 
     def odom_callback(self, msg):
@@ -195,7 +195,8 @@ class GoalAngleController:
 
         # Calculate error in orientation
         ######### Your code starts here #########
-
+        angle_error = self.goal_position["theta"] - self.current_position["theta"]
+        
         ######### Your code ends here #########
 
         # Ensure angle error is within -pi to pi range
@@ -216,7 +217,11 @@ class GoalAngleController:
 
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
-
+            if angle_error < .05:
+                ctrl_msg.angular.z = 0
+            else:
+                uang = self.PconRota.control(angle_error, t)
+                ctrl_msg.angular.z = -uang
             ######### Your code ends here #########
 
             rate.sleep()
