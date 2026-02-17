@@ -214,7 +214,7 @@ class GoalAngleController:
 
             if angle_error is None:
                 continue
-
+            t = time()
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
             if angle_error < .05:
