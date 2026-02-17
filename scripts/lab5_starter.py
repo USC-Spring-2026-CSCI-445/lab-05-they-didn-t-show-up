@@ -218,7 +218,7 @@ class GoalAngleController:
             t = time()
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
-            if angle_error < .05:
+            if math.abs(angle_error) < .05:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
