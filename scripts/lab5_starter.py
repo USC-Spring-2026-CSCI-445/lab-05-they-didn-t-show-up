@@ -158,7 +158,8 @@ class GoalPositionController:
                 ctrl_msg.angular.z = -uang
 
             ######### Your code ends here #########
-
+            
+            self.vel_pub.publish(ctrl_msg)
             rate.sleep()
 
 
@@ -224,6 +225,8 @@ class GoalAngleController:
                 ctrl_msg.angular.z = -uang
             ######### Your code ends here #########
 
+            
+            self.vel_pub.publish(ctrl_msg)
             rate.sleep()
 
 
