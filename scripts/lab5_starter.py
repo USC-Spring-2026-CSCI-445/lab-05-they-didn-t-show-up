@@ -4,6 +4,8 @@ from argparse import ArgumentParser
 import math
 import queue
 
+from time import time
+
 import rospy
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -21,13 +23,30 @@ class PIDController:
         assert u_min < u_max, "u_min should be less than u_max"
         # Initialize PID variables here
         ######### Your code starts here #########
-
+        self.kP = kP
+        self.kD = kD
+        self.kS = kS
+        self.kI = kI
+        self.u_min = u_min
+        self.u_max = u_max
+        self.t_prev = 0
+        self.err_prev = 0
+        self.integral = 0
         ######### Your code ends here #########
 
     def control(self, err, t):
         # computer PID control action here
         ######### Your code starts here #########
-
+        dt = t - self.t_prev
+        self.integral += err * dt
+        if dt <= 1e-6:
+            return 0
+        u = self.kP * err + self.kD * (err - self.err_prev) / dt + self.kS + self.kI * self.Integral
+        u = max(u, self.u_min)
+        u = min(u, self.u_max)
+        self.t_prev = t
+        self.err_prev = err
+        return u
         ######### Your code ends here #########
 
 
@@ -42,14 +61,28 @@ class PDController:
         assert u_min < u_max, "u_min should be less than u_max"
         # Initialize PD variables here
         ######### Your code starts here #########
-
+        self.kP = kP
+        self.kD = kD
+        self.kS = kS
+        self.u_min = u_min
+        self.u_max = u_max
+        self.t_prev = 0
+        self.err_prev = 0
         ######### Your code ends here #########
 
     def control(self, err, t):
         dt = t - self.t_prev
         # Compute PD control action here
         ######### Your code starts here #########
-
+        dt = t - self.t_prev
+        if dt <= 1e-6:
+            return 0
+        u = self.kP * err + self.kD * (err - self.err_prev) / dt + self.kS
+        u = max(u, self.u_min)
+        u = min(u, self.u_max)
+        self.t_prev = t
+        self.err_prev = err
+        return u
         ######### Your code ends here #########
 
 
@@ -69,7 +102,8 @@ class GoalPositionController:
 
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
-
+        self.PconLin = PDController(2,.5, -.22, .22)
+        self.PconRota = PDController(2,.5, -2.84, 2.84)
         ######### Your code ends here #########
 
     def odom_callback(self, msg):
@@ -86,7 +120,8 @@ class GoalPositionController:
 
         # Calculate error in position and orientation
         ######### Your code starts here #########
-
+        distance_error = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.current_position["y"]**2)
+        angle_error = self.goal_position["theta"] - self.current_position["theta"]
         ######### Your code ends here #########
 
         # Ensure angle error is within -pi to pi range
@@ -109,7 +144,18 @@ class GoalPositionController:
 
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
-
+            t = time()
+            if distance_error < .05:
+                ctrl_msg.linear.x = 0
+                ctrl_msg.linear.y = 0
+            else:
+                ulin = self.PconLin.control(distance_error, t)
+                ctrl_msg.linear.x = ulin
+            if angle_error < .05:
+                ctrl_msg.angular.z = 0
+            else:
+                uang = self.PconRota.control(angle_error, t)
+                ctrl_msg.angular.z = uang
 
             ######### Your code ends here #########
 
