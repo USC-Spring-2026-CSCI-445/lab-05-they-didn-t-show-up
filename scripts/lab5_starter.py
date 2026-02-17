@@ -195,7 +195,7 @@ class GoalAngleController:
 
         # Calculate error in orientation
         ######### Your code starts here #########
-        angle_error = self.goal_angle["theta"] - self.current_position["theta"]
+        angle_error = self.goal_angle - self.current_position["theta"]
         
         ######### Your code ends here #########
 
