@@ -181,7 +181,9 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
-        self.PconRota = PDController(1.8,1,0, -2.84, 2.84)
+        self.PconRota = PIDController(1,.1,1,0, -2.84, 2.84)
+        #THIS IS PD BELOW
+        #self.PconRota = PDController(1.8,1,0, -2.84, 2.84)
         ######### Your code ends here #########
 
     def odom_callback(self, msg):
