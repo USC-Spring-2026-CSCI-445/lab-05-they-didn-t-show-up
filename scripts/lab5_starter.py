@@ -163,7 +163,7 @@ class GoalPositionController:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
-                ctrl_msg.angular.z = -uang
+                ctrl_msg.angular.z = uang
 
             ######### Your code ends here #########
             
@@ -232,7 +232,7 @@ class GoalAngleController:
                 ctrl_msg.angular.z = 0
             else:
                 uang = self.PconRota.control(angle_error, t)
-                ctrl_msg.angular.z = -uang
+                ctrl_msg.angular.z = uang
             ######### Your code ends here #########
 
             
