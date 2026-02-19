@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import math
 import queue
 
+from time import time
 
 import rospy
 from geometry_msgs.msg import Twist
@@ -154,7 +155,7 @@ class GoalPositionController:
 
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
-            t = rospy.get_time()
+            t = time()
             if abs(distance_error) < .05:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
@@ -226,7 +227,7 @@ class GoalAngleController:
 
             if angle_error is None:
                 continue
-            t = rospy.get_time()
+            t = time()
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
             if abs(angle_error) < .05:
