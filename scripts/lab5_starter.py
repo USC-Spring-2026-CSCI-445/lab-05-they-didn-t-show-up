@@ -104,7 +104,7 @@ class GoalPositionController:
 
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
-        self.PconLin = PDController(2,.5,1, -.22, .22)
+        self.baseVel = .1
         self.PconRota = PDController(2,.5,1, -2.84, 2.84)
         ######### Your code ends here #########
 
@@ -123,7 +123,12 @@ class GoalPositionController:
         # Calculate error in position and orientation
         ######### Your code starts here #########
         distance_error = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.current_position["y"]**2)
-        angle_error = self.goal_position["theta"] - self.current_position["theta"]
+        dx = self.goal_position["x"] - self.current_position["x"]
+        dy = self.goal_position["y"] - self.current_position["y"]
+
+        theta_desired = math.atan2(dy, dx)
+        angle_error = theta_desired - self.current_position["theta"]
+        
         ######### Your code ends here #########
 
         # Ensure angle error is within -pi to pi range
@@ -151,8 +156,7 @@ class GoalPositionController:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
             else:
-                ulin = self.PconLin.control(distance_error, t)
-                ctrl_msg.linear.x = ulin
+                ctrl_msg.linear.x = self.baseVel
             if abs(angle_error) < .05:
                 ctrl_msg.angular.z = 0
             else:
