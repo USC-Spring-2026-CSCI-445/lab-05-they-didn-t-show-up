@@ -105,7 +105,7 @@ class GoalPositionController:
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
         self.baseVel = .1
-        self.PconRota = PDController(2,.5,1, -2.84, 2.84)
+        self.PconRota = PIDController(4,.1,1,0, -2.84, 2.84)
         ######### Your code ends here #########
 
     def odom_callback(self, msg):
@@ -127,6 +127,8 @@ class GoalPositionController:
         dy = self.goal_position["y"] - self.current_position["y"]
 
         theta_desired = math.atan2(dy, dx)
+        if theta_desired < 0:
+            theta_desired = 2 * math.pi + theta_desired
         angle_error = theta_desired - self.current_position["theta"]
         
         ######### Your code ends here #########
