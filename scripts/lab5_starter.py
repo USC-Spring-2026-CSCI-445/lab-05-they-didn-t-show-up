@@ -36,6 +36,9 @@ class PIDController:
     def control(self, err, t):
         # computer PID control action here
         ######### Your code starts here #########
+        if self.t_prev == 0:
+            self.t_prev = t
+            self.err_prev = err
         dt = t - self.t_prev
         self.integral += err * dt
         if dt <= 1e-6:
