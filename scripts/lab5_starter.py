@@ -122,7 +122,7 @@ class GoalPositionController:
 
         # Calculate error in position and orientation
         ######### Your code starts here #########
-        distance_error = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.current_position["y"]**2)
+        distance_error = math.sqrt(self.goal_position["x"]**2 + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.current_position["y"]**2)
         dx = self.goal_position["x"] - self.current_position["x"]
         dy = self.goal_position["y"] - self.current_position["y"]
 
